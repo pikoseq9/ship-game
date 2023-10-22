@@ -47,7 +47,7 @@ public:
 	void setUpBoard() {
 		int x, y, lastX = 0, lastY = 0;
 		for (int i = 0;i < smallShips;i++) {
-			boardView();
+			privateBoardView();
 			cout << "Podaj koordynaty " << i + 1 << " malego statku na planszy [9,9]\n";
 			cin >> x >> y;
 			if (x < 1 || y < 1) {
@@ -67,7 +67,7 @@ public:
 			}
 		}
 		for (int i = 0;i < mediumShips;i++) {
-			boardView();
+			privateBoardView();
 			cout << "Podaj koordynaty dwoch kawalkow " << i + 1 << " sredniego statku na planszy [9,9]\n";
 			for (int j = 0;j < 2;j++) {
 				cin >> x >> y;
@@ -97,7 +97,7 @@ public:
 			}
 		}
 		for (int i = 0;i < hugeShips;i++) {
-			boardView();
+			privateBoardView();
 			cout << "Podaj koordynaty trzech kawalkow jedynego flagowca na planszy 9 na 9\n";
 			for (int j = 0;j < 3;j++) {
 				cin >> x >> y;
@@ -131,22 +131,22 @@ public:
 		srand(time(NULL));
 		int xrand, yrand, ships = 0;
 		while (ships < smallShips) {
-			xrand = rand() % 7 + 3; // losowanie koordynat
-			yrand = rand() % 7 + 3; // losowanie koordynat
+			xrand = rand() % 9 + 1; // generating random coordinates
+			yrand = rand() % 9 + 1; // generating random coordinates
 			while (privateBoard[xrand][yrand] == 'x') {
-				xrand = rand() % 7 + 3; // losowanie koordynat
-				yrand = rand() % 7 + 3; // losowanie koordynat
+				xrand = rand() % 9 + 1; // generating random coordinates
+				yrand = rand() % 9 + 1; // generating random coordinates
 			}
 			privateBoard[xrand][yrand] = 'x';
 			ships++;
 		}
 		ships = 0;
 		while (ships < mediumShips) {
-			xrand = rand() % 7 + 3; // losowanie koordynat
-			yrand = rand() % 7 + 3; // losowanie koordynat
+			xrand = rand() % 9 + 1; // generating random coordinates
+			yrand = rand() % 9 + 1; // generating random coordinates
 			while (privateBoard[xrand][yrand] == 'x' && privateBoard[xrand - 1][yrand] == 'x' && privateBoard[xrand - 2][yrand] == 'x') {
-				xrand = rand() % 7 + 3; // losowanie koordynat
-				yrand = rand() % 7 + 3; // losowanie koordynat
+				xrand = rand() % 9 + 1; // generating random coordinates
+				yrand = rand() % 9 + 1; // generating random coordinates
 			}
 			privateBoard[xrand][yrand] = 'x';
 			privateBoard[xrand - 1][yrand] = 'x';
@@ -154,11 +154,11 @@ public:
 		}
 		ships = 0;
 		while (ships < hugeShips) {
-			xrand = rand() % 7 + 3; // losowanie koordynat
-			yrand = rand() % 7 + 3; // losowanie koordynat
+			xrand = rand() % 9 + 1; // generating random coordinates
+			yrand = rand() % 9 + 1; // generating random coordinates
 			while (privateBoard[xrand][yrand] == 'x' && privateBoard[xrand][yrand - 1] == 'x' && privateBoard[xrand][yrand - 2] == 'x') {
-				xrand = rand() % 7 + 3; // losowanie koordynat
-				yrand = rand() % 7 + 3; // losowanie koordynat
+				xrand = rand() % 9 + 1; // generating random coordinates
+				yrand = rand() % 9 + 1; // generating random coordinates
 			}
 			privateBoard[xrand][yrand] = 'x';
 			privateBoard[xrand][yrand - 1] = 'x';
@@ -166,21 +166,21 @@ public:
 			ships++;
 		}
 	}
-	void boardView() {
+	void publicBoardView() {
 		for (int i = 0;i < row;i++) {
 			for (int j = 0;j < row;j++) {
 				cout.width(5);
-				cout << privateBoard[i][j];
+				cout << publicBoard[i][j];
 			}
 			cout << "\n";
 		}
 		cout << "\n";
 	}
-	void boardBotView() {
+	void privateBoardView() {
 		for (int i = 0;i < row;i++) {
 			for (int j = 0;j < row;j++) {
 				cout.width(5);
-				cout << publicBoard[i][j];
+				cout << privateBoard[i][j];
 			}
 			cout << "\n";
 		}
@@ -201,55 +201,60 @@ void shipBombing() {
 
 int main() {
 	int x, y;
-
 	Player player1;
 	player1.privateBoardCreate();
+    player1.publicBoardCreate();
 	player1.setUpBoard();
 	Player player2;
 	player2.publicBoardCreate();
 	player2.privateBoardCreate();
 	player2.autoSetUpBoard();
-	player2.boardBotView();
-	player1.boardView();
+	player2.privateBoardView();
+	player1.publicBoardView();
 	cout << endl << "============================ Czas rozpoczac bitwe ==============================\n\n" << endl << endl;
 	while (!player1.winner && !player2.winner) {
 		cout << "Twoja kolej. Zaatakuj przeciwnika!\n\n Wprowadz koordynaty miejsca ataku\n\n";
-		player2.boardBotView();
-		player1.boardView();
+		player2.publicBoardView();
+		player1.publicBoardView();
 		cin >> x >> y;
 		player2.publicBoard[x][y] = player2.privateBoard[x][y];
 		while (player2.publicBoard[x][y] == 'x') {
 			if (player1.points == 10) {
+                player1.winner = true;
 				cout << "Wygrales, gratulacje!";
 				break;
 			}
 			cout << "Trafiles, mozesz ponowic atak, pomijajac ture przeciwnika!\n\n";
-			player2.boardBotView();
-			player1.boardView();
+			player2.publicBoardView();
+			player1.publicBoardView();
 			player1.points++;
 			cin >> x >> y;
-			if (player1.points == 10) {
-				cout << "Wygrales, gratulacje!";
-				break;
-			}
+            player2.publicBoard[x][y] = player2.privateBoard[x][y];
 		}
+        if (player1.points == 10) {
+            player1.winner = true;
+            cout << "Wygrales, gratulacje!";
+            break;
+        }
 		cout << "Chybiles, tura twojego przeciwnika\n\n";
 		x = rand() % 7 + 3;
 		y = rand() % 7 + 3;
+        player1.publicBoard[x][y] = player1.privateBoard[x][y];
+        cout<<"Przeciwnik strzela w punkt: "<<x<<" "<<y<<"\n\n";
 		while (player1.publicBoard[x][y] == 'x') {
 			cout << "Przeciwnik trafil, jego tura!\n\n";
-			player1.privateBoard[x][y] = '*';
-			player2.boardBotView();
-			player1.boardView();
+			player2.publicBoardView();
+			player1.publicBoardView();
 			player2.points++;
 			x = rand() % 7 + 3;
 			y = rand() % 7 + 3;
+            player1.publicBoard[x][y] = player1.privateBoard[x][y];
 		}
+        if (player2.points == 10) {
+            cout << "Niestety, tym razem to ty przegrales!";
+            break;
+        }
 		cout << "Przeciwnik chybil!\n\n";
-		if (player2.points == 10) {
-			cout << "Niestety, tym razem to ty przegrales!";
-			break;
-		}
 	}
 
 }
