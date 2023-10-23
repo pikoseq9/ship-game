@@ -1,6 +1,5 @@
 #include <iostream>
 #include <ctime>
-#include <iomanip>
 
 using namespace std;
 
@@ -166,8 +165,8 @@ public:
     }
 
     void publicBoardView() {
-        for (auto & i : publicBoard) {
-            for (char j : i) {
+        for (auto &i: publicBoard) {
+            for (char j: i) {
                 cout.width(5);
                 cout << j;
             }
@@ -177,8 +176,8 @@ public:
     }
 
     void privateBoardView() {
-        for (auto & i : privateBoard) {
-            for (char j : i) {
+        for (auto &i: privateBoard) {
+            for (char j: i) {
                 cout.width(5);
                 cout << j;
             }
@@ -221,6 +220,7 @@ int main() {
         cin >> x >> y;
         player2.publicBoard[x][y] = player2.privateBoard[x][y];
         while (player2.publicBoard[x][y] == 'x') {
+            player2.privateBoard[x][y] = '*';
             if (player1.points == 10) {
                 player1.winner = true;
                 cout << "Wygrales, gratulacje!";
@@ -239,17 +239,18 @@ int main() {
             break;
         }
         cout << "Chybiles, tura twojego przeciwnika\n\n";
-        x = rand() % 7 + 3;
-        y = rand() % 7 + 3;
+        x = rand() % 9 + 1;
+        y = rand() % 9 + 1;
         player1.publicBoard[x][y] = player1.privateBoard[x][y];
         cout << "Przeciwnik strzela w punkt: " << x << " " << y << "\n\n";
         while (player1.publicBoard[x][y] == 'x') {
+            player1.privateBoard[x][y] = '*';
             cout << "Przeciwnik trafil, jego tura!\n\n";
             player2.publicBoardView();
             player1.publicBoardView();
             player2.points++;
-            x = rand() % 7 + 3;
-            y = rand() % 7 + 3;
+            x = rand() % 9 + 1;
+            y = rand() % 9 + 1;
             player1.publicBoard[x][y] = player1.privateBoard[x][y];
         }
         if (player2.points == 10) {
