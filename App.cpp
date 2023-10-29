@@ -1,5 +1,7 @@
 #include <iostream>
 #include <ctime>
+#include <chrono>
+#include <thread>
 
 using namespace std;
 
@@ -52,6 +54,7 @@ public:
             privateBoardView();
             cout << "Podaj koordynaty " << i + 1 << " malego statku na planszy [9,9]\n";
             cin >> x >> y;
+            this_thread::sleep_for(chrono::milliseconds (100));
             if (x < 1 || y < 1) {
                 cout << "Koordynaty musza byc wieksze od 0 i mniejsze od 11\n";
                 cin >> x >> y;
@@ -71,6 +74,7 @@ public:
             cout << "Podaj koordynaty dwoch kawalkow " << i + 1 << " sredniego statku na planszy [9,9]\n";
             for (int j = 0; j < 2; j++) {
                 cin >> x >> y;
+                this_thread::sleep_for(chrono::milliseconds (100));
                 if (j == 0 || (abs(lastY - y) < 2 && lastX == x) || (abs(lastX - x) < 2 && lastY == y)) {
                     if (x < 1 || y < 1) {
                         cout << "Koordynaty musza byc wieksze od 0 i mniejsze od 9\n";
@@ -98,6 +102,7 @@ public:
             cout << "Podaj koordynaty trzech kawalkow jedynego flagowca na planszy 9 na 9\n";
             for (int j = 0; j < 3; j++) {
                 cin >> x >> y;
+                this_thread::sleep_for(chrono::milliseconds (100));
                 if (j == 0 || (abs(lastY - y) < 2 && lastX == x) || (abs(lastX - x) < 2 && lastY == y)) {
                     if (x < 1 || y < 1) {
                         cout << "Koordynaty musza byc wieksze od 0 i mniejsze od 9\n";
@@ -218,6 +223,7 @@ int main() {
         player2.publicBoardView();
         player1.publicBoardView();
         cin >> x >> y;
+        this_thread::sleep_for(chrono::milliseconds (200));
         player2.publicBoard[x][y] = player2.privateBoard[x][y];
         while (player2.publicBoard[x][y] == 'x') {
             player2.privateBoard[x][y] = '*';
@@ -226,11 +232,13 @@ int main() {
                 cout << "Wygrales, gratulacje!";
                 break;
             }
+
             cout << "Trafiles, mozesz ponowic atak, pomijajac ture przeciwnika!\n\n";
             player2.publicBoardView();
             player1.publicBoardView();
             player1.points++;
             cin >> x >> y;
+            this_thread::sleep_for(chrono::milliseconds (200));
             player2.publicBoard[x][y] = player2.privateBoard[x][y];
         }
         if (player1.points == 10) {
@@ -242,12 +250,14 @@ int main() {
         x = rand() % 9 + 1;
         y = rand() % 9 + 1;
         player1.publicBoard[x][y] = player1.privateBoard[x][y];
+        this_thread::sleep_for(chrono::milliseconds (500));
         cout << "Przeciwnik strzela w punkt: " << x << " " << y << "\n\n";
         while (player1.publicBoard[x][y] == 'x') {
             player1.privateBoard[x][y] = '*';
             cout << "Przeciwnik trafil, jego tura!\n\n";
             player2.publicBoardView();
             player1.publicBoardView();
+            this_thread::sleep_for(chrono::milliseconds (500));
             player2.points++;
             x = rand() % 9 + 1;
             y = rand() % 9 + 1;
