@@ -6,7 +6,6 @@
 using namespace std;
 
 const int row = 10;
-char board[row][row];
 
 class Player {
 public:
@@ -128,7 +127,7 @@ public:
     }
 
     void autoSetUpBoard() {
-        srand(time(NULL));
+        srand(time(nullptr));
         int xrand, yrand, ships = 0;
         while (ships < smallShips) {
             xrand = rand() % 9 + 1; // generating random coordinates
@@ -190,21 +189,9 @@ public:
         }
         cout << "\n";
     }
-
-    void winnerEvaluate() {
-        if (points == 6) {
-            winner = true;
-        }
-    }
 };
 
-void shipBombing() {
-    int x, y;
-
-
-}
-
-int main() {
+void App() {
     int x, y;
     Player player1;
     player1.privateBoardCreate();
@@ -270,4 +257,9 @@ int main() {
         cout << "Przeciwnik chybil!\n\n";
     }
 
+}
+
+
+int main() {
+    App();
 }
